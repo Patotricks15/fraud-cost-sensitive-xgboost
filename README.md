@@ -2,6 +2,17 @@
 
 **Question:** How much does a cost-sensitive tree model improve on the FD01 logistic baseline?
 
+## Portfolio
+
+| ID | Repository | Focus |
+|---|---|---|
+| FD01 | [fraud-logistic-baseline](https://github.com/Patotricks15/fraud-logistic-baseline) | Logistic baseline |
+| **FD02** | **fraud-cost-sensitive-xgboost** (this repo) | Cost-sensitive XGBoost |
+| FD03 | [fraud-unsupervised-anomaly](https://github.com/Patotricks15/fraud-unsupervised-anomaly) | Isolation Forest and LOF |
+| FD04 | [fraud-velocity-graph-features](https://github.com/Patotricks15/fraud-velocity-graph-features) | Velocity and graph features (blocked) |
+| FD05 | [fraud-threshold-cost-policy](https://github.com/Patotricks15/fraud-threshold-cost-policy) | Cost-based threshold policy |
+| FD06 | [fraud-drift-monitoring](https://github.com/Patotricks15/fraud-drift-monitoring) | Drift monitoring |
+
 ## Data
 
 - Credit Card Fraud Detection, Kaggle `mlg-ulb/creditcardfraud` (real anonymized transactions, September 2013, 284,807 rows, 492 frauds). Same dataset as FD01.

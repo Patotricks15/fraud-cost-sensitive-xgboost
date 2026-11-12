@@ -21,22 +21,28 @@
 
 ## Results
 
-Not yet produced. The notebook needs the Kaggle dataset, which is not downloaded to this workstation. After running the notebook on Kaggle, fill in these tables:
+Real run (Kaggle data read from a local copy). Test window: 42,721 rows, 52 frauds. Validation: 42,718 rows, 56 frauds. Split: time-ordered, training 199,368 rows (384 frauds).
 
 | Window | Model | PR-AUC | ROC-AUC | Recall @ 1% alerts | Brier |
 |---|---|---|---|---|---|
-| Validation | Baseline (fixed params) | pending | pending | pending | pending |
-| Validation | Tuned (best of 30 configs) | pending | pending | pending | pending |
-| Test | Baseline (fixed params) | pending | pending | pending | pending |
-| Test | Tuned (best of 30 configs) | pending | pending | pending | pending |
+| Validation | Baseline (fixed params) | 0.844 | 0.983 | 0.929 | not reported |
+| Validation | Tuned (best of 30 configs) | 0.871 | 0.988 | 0.911 | not reported |
+| Test | Baseline (fixed params) | 0.765 | 0.982 | 0.827 | 0.000442 |
+| Test | Tuned (best of 30 configs) | 0.772 | 0.979 | 0.846 | 0.000453 |
 
-Test window confusion matrix at threshold 0.5: pending.
+Chosen config (validation PR-AUC 0.871): `max_depth=8`, `learning_rate=0.0348`, `n_estimators=463`, `subsample=0.837`, `colsample_bytree=0.717`, `min_child_weight=3`, `reg_lambda=1.068`.
 
-FD01 logistic test PR-AUC for comparison: pending (record from the FD01 notebook output).
+Test confusion matrix at threshold 0.5: baseline TN 42,661, FP 8, FN 13, TP 39. Tuned TN 42,662, FP 7, FN 14, TP 38.
+
+FD01 logistic test PR-AUC: 0.690 (from the FD01 README). Both XGBoost models beat it on test PR-AUC.
+
+Top features by gain (tuned model): V14 (36%), V10 (16%), V12 (8%), V17 (6%), V4 (5%).
 
 ## Decision
 
-Pending the Kaggle run. The tuned tree model must beat the FD01 logistic test PR-AUC to justify its extra complexity. If it does not, FD01 remains the reference model. The notebook variable `FD01_TEST_PR_AUC` holds that value for the comparison.
+Both tree models beat the FD01 logistic test PR-AUC (0.690) by a clear margin: baseline 0.765, tuned 0.772. The tuning gain over the fixed-parameter baseline is small on test: PR-AUC +0.007 and recall at 1% alerts +0.019, but ROC-AUC is slightly lower (0.979 vs 0.982). Its validation gain (+0.027 PR-AUC) did not carry fully to test. The tuned model is reported as the FD02 result because it was selected on validation only, but the test gain alone is too small to justify the search budget. The main gain over FD01 comes from the tree model itself.
+
+The notebook's `FD01_TEST_PR_AUC` variable is still unset (its output says "not recorded yet"), so the comparison above uses the value from the FD01 README.
 
 ## Limitation
 
@@ -49,7 +55,7 @@ Pending the Kaggle run. The tuned tree model must beat the FD01 logistic test PR
 
 The notebook writes `data/fd02_scores.csv` with columns `split` (`val` or `test`), `Time`, `Amount`, `Class`, `score` (predicted fraud probability of the tuned model). It contains validation and test rows only. The tuned booster is saved to `data/fd02_xgb_tuned.json`.
 
-Both files are git-ignored and not committed. After the Kaggle run, copy `fd02_scores.csv` from the Kaggle output into the FD05 repository's `data/` folder.
+Both files are git-ignored and not committed. The FD02 notebook was run locally against the downloaded copy. Copy `fd02_scores.csv` into the FD05 repository's `data/` folder (the FD05 notebook reads it from there).
 
 ## Reproduce
 

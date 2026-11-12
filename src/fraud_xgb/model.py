@@ -119,7 +119,8 @@ def select_best(results: pd.DataFrame) -> dict:
     missing = {"val_pr_auc", *PARAM_NAMES} - set(results.columns)
     if missing:
         raise ValueError(f"search results are missing columns: {sorted(missing)}")
-    best = results.loc[results["val_pr_auc"].idxmax()]
+    # Select as a one-row frame so per-column dtypes survive; a row Series would upcast ints to float.
+    best = results.loc[[results["val_pr_auc"].idxmax()]].to_dict("records")[0]
     return {name: _python_scalar(best[name]) for name in PARAM_NAMES}
 
 

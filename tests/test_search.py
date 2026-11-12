@@ -36,6 +36,13 @@ def test_select_best_breaks_ties_by_earliest_trial():
     assert best == results.loc[1, PARAM_NAMES].to_dict()
 
 
+def test_select_best_keeps_integer_params_integer():
+    best = select_best(_results([0.0, 0.0, 0.0, 0.0]))
+    for name in ("max_depth", "n_estimators", "min_child_weight"):
+        assert isinstance(best[name], int), name
+    assert isinstance(best["learning_rate"], float)
+
+
 def test_select_best_requires_validation_column():
     results = _results([0.0, 0.0, 0.0, 0.0]).drop(columns=["val_pr_auc"])
     with pytest.raises(ValueError):
